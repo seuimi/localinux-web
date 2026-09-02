@@ -118,6 +118,103 @@
     background: #d8d8d8;
     border-color: #d8d8d8;
   }
+  .btn svg{
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    vertical-align: -3px;
+    fill: currentColor;
+  }
+
+  /* modal */
+  .overlay{
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    padding: 20px;
+    animation: fadeIn 180ms ease both;
+  }
+  .overlay.open{
+    display: flex;
+  }
+
+  .modal{
+    width: 100%;
+    max-width: 380px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.16);
+    background: #0d0d0d;
+    padding: 1.8rem 1.8rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    animation: rise 220ms cubic-bezier(.2,.8,.2,1) both;
+  }
+
+  .modal h2{
+    margin: 0 0 0.6rem;
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: #ff5c5c;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .modal h2 .warn-icon{
+    font-size: 1.15rem;
+  }
+
+  .modal p{
+    margin: 0 0 0.3rem;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--ink-dim);
+  }
+  .modal p.en{
+    margin-bottom: 1.4rem;
+  }
+
+  .modal-actions{
+    display: flex;
+    gap: 10px;
+  }
+  .modal-actions .btn{
+    flex: 1;
+    text-align: center;
+  }
+  .btn-cancel{
+    background: var(--ink);
+    color: #050505;
+    border-color: var(--ink);
+    cursor: pointer;
+  }
+  .btn-cancel:hover{
+    background: #d8d8d8;
+    border-color: #d8d8d8;
+  }
+  .btn-confirm{
+    background: #e03d3d;
+    color: #fff;
+    border-color: #e03d3d;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-confirm:hover{
+    background: #c92f2f;
+    border-color: #c92f2f;
+  }
+
+  @keyframes fadeIn{
+    from{ opacity: 0; }
+    to{ opacity: 1; }
+  }
 
   .status{
     margin-top: 32px;
@@ -170,15 +267,41 @@
   <main>
     <h1 class="wordmark">Localinux</h1>
     <div class="actions">
-      <a class="btn primary" href="https://github.com/seuimi/localiunx" target="_blank" rel="noopener noreferrer">GitHub</a>
-      <a class="btn" href="https://github.com/seuimi/localiunx" target="_blank" rel="noopener noreferrer">Download</a>
-      <a class="btn" href="https://github.com/seuimi/localiunx" target="_blank" rel="noopener noreferrer">Server Download</a>
+      <a class="btn primary" href="https://github.com/seuimi/localinux" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>GitHub
+      </a>
+      <a class="btn" href="https://github.com/seuimi/localinux" target="_blank" rel="noopener noreferrer">Download</a>
+      <button type="button" class="btn" id="serverDownloadBtn">Server Download</button>
     </div>
     <div class="status">
       <span class="pulse"></span>
       <span>Open Source</span>
     </div>
   </main>
+
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <h2><span class="warn-icon">⚠️</span>경고 !!</h2>
+      <p>클라이언트가 자동으로 다운로드되지 않는 경우, 아래 확인 버튼을 눌러 직접 다운로드 페이지로 이동해 주세요.</p>
+      <p class="en"><strong>WARNING !!</strong> If the client does not download automatically, please click Confirm to go to the download page manually.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-cancel" id="cancelBtn">취소</button>
+        <a class="btn btn-confirm" id="confirmBtn" href="https://github.com/seuimi/localinux" target="_blank" rel="noopener noreferrer">확인</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const overlay = document.getElementById('overlay');
+    const openBtn = document.getElementById('serverDownloadBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    openBtn.addEventListener('click', () => overlay.classList.add('open'));
+    cancelBtn.addEventListener('click', () => overlay.classList.remove('open'));
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) overlay.classList.remove('open');
+    });
+  </script>
 
 </body>
 </html>
